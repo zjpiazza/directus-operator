@@ -1,0 +1,28 @@
+apiVersion: apps.directus.io/v1alpha1
+kind: Directus
+metadata:
+  labels:
+    app.kubernetes.io/name: directus
+    app.kubernetes.io/instance: directus-sample
+    app.kubernetes.io/part-of: directus-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: directus-operator
+  name: directus-sample
+spec:
+  image: directus/directus:10.10.0
+  replicas: 1
+  publicUrl: "http://localhost:8055"
+  database:
+    type: postgres
+    postgres:
+      instances: 1
+      storage: 1Gi
+  extensions:
+    - name: command-palette
+      source: "@directus-labs/command-palette-module"
+      version: 1.0.1
+      type: npm
+  ingress:
+    enabled: true
+    host: directus.local
+    tls: false

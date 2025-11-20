@@ -1,0 +1,119 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: directuses.apps.directus.io
+spec:
+  group: apps.directus.io
+  names:
+    kind: Directus
+    listKind: DirectusList
+    plural: directuses
+    singular: directus
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Directus is the Schema for the directuses API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: DirectusSpec defines the desired state of Directus
+            properties:
+              database:
+                description: Database configures the database connection.
+                properties:
+                  postgres:
+                    description: Postgres configures the CloudNativePG cluster if
+                      Type is postgres.
+                    properties:
+                      instances:
+                        description: Instances is the number of Postgres instances.
+                        type: integer
+                      storage:
+                        description: Storage is the storage size.
+                        type: string
+                    type: object
+                  type:
+                    description: Type is the database type (postgres, mysql).
+                    type: string
+                type: object
+              extensions:
+                description: Extensions is a list of extensions to install.
+                items:
+                  properties:
+                    name:
+                      description: Name is the name of the extension.
+                      type: string
+                    source:
+                      description: Source is the URL to download the extension from
+                        (git or http).
+                      type: string
+                    type:
+                      description: Type is the type of extension (interface, layout,
+                        etc.).
+                      type: string
+                    version:
+                      description: Version is the version of the extension to install
+                        (npm only).
+                      type: string
+                  required:
+                  - name
+                  - source
+                  type: object
+                type: array
+              image:
+                description: Image is the Directus image to use.
+                type: string
+              ingress:
+                description: Ingress configures the ingress.
+                properties:
+                  enabled:
+                    description: Enabled enables ingress.
+                    type: boolean
+                  host:
+                    description: Host is the ingress host.
+                    type: string
+                  tls:
+                    description: TLS enables TLS.
+                    type: boolean
+                type: object
+              publicUrl:
+                description: PublicURL overrides the PUBLIC_URL environment variable.
+                type: string
+              replicas:
+                description: Replicas is the number of replicas.
+                format: int32
+                type: integer
+            type: object
+          status:
+            description: DirectusStatus defines the observed state of Directus
+            properties:
+              databaseReady:
+                description: DatabaseReady indicates if the database is ready.
+                type: boolean
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
