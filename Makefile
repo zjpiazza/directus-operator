@@ -285,3 +285,21 @@ catalog-build: opm ## Build a catalog image.
 .PHONY: catalog-push
 catalog-push: ## Push a catalog image.
 	$(MAKE) docker-push IMG=$(CATALOG_IMG)
+
+.PHONY: changelog-app
+changelog-app: ## Create a new changelog entry for the application
+	changie new
+
+.PHONY: changelog-chart
+changelog-chart: ## Create a new changelog entry for the chart
+	cd charts/directus-operator && changie new
+
+.PHONY: release-app
+release-app: ## Release a new version of the application
+	changie batch auto
+	changie merge
+
+.PHONY: release-chart
+release-chart: ## Release a new version of the chart
+	cd charts/directus-operator && changie batch auto
+	cd charts/directus-operator && changie merge

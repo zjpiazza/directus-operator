@@ -1,0 +1,5 @@
+kind: Added
+body: Add support for private NPM registries via .npmrc secret mounting
+time: 2025-11-21T15:09:08.910515913-06:00
+custom:
+    "": ""

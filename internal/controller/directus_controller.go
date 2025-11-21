@@ -192,6 +192,31 @@ func (r *DirectusReconciler) reconcileDeployment(ctx context.Context, directus *
 			// Init container to download extensions
 			// We use node:20-alpine to support npm installs and git
 			cmd := "apk add --no-cache git && mkdir -p /temp-extensions && cd /temp-extensions && "
+
+			initContainerEnv := []corev1.EnvVar{}
+			initContainerVolumeMounts := []corev1.VolumeMount{
+				{
+					Name:      "extensions",
+					MountPath: "/directus/extensions",
+				},
+			}
+
+			if directus.Spec.ExtensionsConfig != nil && directus.Spec.ExtensionsConfig.SecretRef != "" {
+				volumes = append(volumes, corev1.Volume{
+					Name: "npmrc",
+					VolumeSource: corev1.VolumeSource{
+						Secret: &corev1.SecretVolumeSource{
+							SecretName: directus.Spec.ExtensionsConfig.SecretRef,
+						},
+					},
+				})
+				initContainerVolumeMounts = append(initContainerVolumeMounts, corev1.VolumeMount{
+					Name:      "npmrc",
+					MountPath: "/root/.npmrc",
+					SubPath:   ".npmrc",
+				})
+			}
+
 			for _, ext := range directus.Spec.Extensions {
 				cmd += fmt.Sprintf("echo 'Processing extension %s'; ", ext.Name)
 				if ext.Type == "npm" {
@@ -229,15 +254,11 @@ func (r *DirectusReconciler) reconcileDeployment(ctx context.Context, directus *
 			}
 
 			initContainers = append(initContainers, corev1.Container{
-				Name:    "install-extensions",
-				Image:   "node:20-alpine",
-				Command: []string{"sh", "-c", cmd},
-				VolumeMounts: []corev1.VolumeMount{
-					{
-						Name:      "extensions",
-						MountPath: "/directus/extensions",
-					},
-				},
+				Name:         "install-extensions",
+				Image:        "node:20-alpine",
+				Command:      []string{"sh", "-c", cmd},
+				VolumeMounts: initContainerVolumeMounts,
+				Env:          initContainerEnv,
 			})
 		}
 

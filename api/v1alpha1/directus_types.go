@@ -41,6 +41,10 @@ type DirectusSpec struct {
 	// +optional
 	Extensions []Extension `json:"extensions,omitempty"`
 
+	// ExtensionsConfig configures extension installation.
+	// +optional
+	ExtensionsConfig *ExtensionsConfig `json:"extensionsConfig,omitempty"`
+
 	// Ingress configures the ingress.
 	// +optional
 	Ingress IngressConfig `json:"ingress,omitempty"`
@@ -84,6 +88,13 @@ type Extension struct {
 	// Type is the type of extension (interface, layout, etc.).
 	// +optional
 	Type string `json:"type,omitempty"`
+}
+
+type ExtensionsConfig struct {
+	// SecretRef is the name of the secret containing the .npmrc file.
+	// The secret must have a key named ".npmrc".
+	// +optional
+	SecretRef string `json:"secretRef,omitempty"`
 }
 
 type IngressConfig struct {

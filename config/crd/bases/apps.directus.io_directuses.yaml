@@ -81,6 +81,15 @@ spec:
                   - source
                   type: object
                 type: array
+              extensionsConfig:
+                description: ExtensionsConfig configures extension installation.
+                properties:
+                  secretRef:
+                    description: |-
+                      SecretRef is the name of the secret containing the .npmrc file.
+                      The secret must have a key named ".npmrc".
+                    type: string
+                type: object
               image:
                 description: Image is the Directus image to use.
                 type: string
