@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  directus-operator:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2025-11-21T14:37:05.149769758Z"
+    description: A Helm chart for Kubernetes
+    digest: 0fd0cc98d3825afd1c6f81ee41bba660b5b0388d1eb2fb85cfeece70325f885e
+    name: directus-operator
+    type: application
+    urls:
+    - https://github.com/zjpiazza/directus-operator/releases/download/directus-operator-0.1.0/directus-operator-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-11-21T14:37:05.14979747Z"
